@@ -8,28 +8,63 @@ function showPage(pageId) {
     }
 }
 
-// Fungsi menambah atau memperbarui stok
-function addToStockTable(model, type, quantities, isSelling = false) {
+// Fungsi untuk menyimpan data ke Local Storage
+function saveDataToLocalStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Fungsi untuk mengambil data dari Local Storage
+function getDataFromLocalStorage(key) {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+}
+
+// Fungsi untuk memperbarui tabel Stock Items
+function updateStockTableFromLocalStorage() {
+    const stockData = getDataFromLocalStorage('stockData');
     const tableBody = document.querySelector('#stock-table tbody');
-    let row = Array.from(tableBody.rows).find(r => r.cells[0].textContent === type && r.cells[1].textContent === model);
+    tableBody.innerHTML = ''; // Kosongkan tabel sebelum diperbarui
 
-    if (!row) {
-        // Jika baris tidak ditemukan, tambahkan baris baru
-        row = document.createElement('tr');
-        row.innerHTML = `<td>${type}</td><td>${model}</td>` + Object.keys(quantities).map(() => `<td>0</td>`).join('');
+    stockData.forEach(item => {
+        const row = document.createElement('tr');
+        const colourColumns = Object.keys(item.quantities).map(color => {
+            const value = item.quantities[color] || 0;
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            if (value > 0) {
+                cell.classList.add('green'); // Tambahkan warna hijau jika stok > 0
+            }
+            return cell.outerHTML;
+        }).join('');
+
+        row.innerHTML = `<td>${item.type}</td><td>${item.model}</td>${colourColumns}`;
         tableBody.appendChild(row);
-    }
-
-    // Update stok pada baris yang ditemukan atau ditambahkan
-    Object.keys(quantities).forEach((color, index) => {
-        const cell = row.cells[index + 2];
-        const newValue = Math.max((parseInt(cell.textContent) || 0) + quantities[color], 0); // Pastikan stok tidak negatif
-        cell.textContent = newValue;
-        cell.className = newValue > 0 ? 'green' : ''; // Tambahkan warna hijau jika stok lebih dari 0
     });
 }
 
-// Fungsi untuk penanganan data Selling
+// Fungsi untuk menambah atau memperbarui stok
+function addToStockTable(model, type, quantities, isSelling = false) {
+    let stockData = getDataFromLocalStorage('stockData');
+    let item = stockData.find(i => i.type === type && i.model === model);
+
+    if (!item) {
+        // Jika item tidak ditemukan, tambahkan item baru
+        item = { type, model, quantities: { ...quantities } };
+        stockData.push(item);
+    } else {
+        // Jika item ditemukan, perbarui jumlah stok
+        Object.keys(quantities).forEach(color => {
+            const currentStock = item.quantities[color] || 0;
+            const adjustment = quantities[color];
+            item.quantities[color] = Math.max(currentStock + adjustment, 0); // Pastikan stok tidak negatif
+        });
+    }
+
+    saveDataToLocalStorage('stockData', stockData);
+    updateStockTableFromLocalStorage(); // Perbarui tampilan tabel
+}
+
+// Fungsi untuk menangani Selling
 function handleSelling(event) {
     event.preventDefault();
 
@@ -39,16 +74,14 @@ function handleSelling(event) {
     const color = document.getElementById('selling-colour').value;
     const quantity = -Math.abs(parseInt(document.getElementById('selling-quantity').value));
 
-    // Validasi input
     if (!date || !model || !type || !color || isNaN(quantity)) {
         alert('Please complete all fields before submitting.');
         return;
     }
 
-    // Proses data dan update tabel
     addToStockTable(model, type, { [color]: quantity }, true);
 
-    // Reset input field setelah data berhasil disimpan
+    // Reset input form setelah data berhasil disimpan
     document.getElementById('selling-date').value = '';
     document.getElementById('selling-model').value = '';
     document.getElementById('selling-type').value = '';
@@ -58,7 +91,7 @@ function handleSelling(event) {
     alert(`Selling data saved for ${model} (${type}) on ${date}. Stock has been updated.`);
 }
 
-// Fungsi untuk penanganan data Purchase
+// Fungsi untuk menangani Purchase
 function handlePurchase(event) {
     event.preventDefault();
 
@@ -68,16 +101,14 @@ function handlePurchase(event) {
     const color = document.getElementById('purchase-colour').value;
     const quantity = Math.abs(parseInt(document.getElementById('purchase-quantity').value));
 
-    // Validasi input
     if (!date || !model || !type || !color || isNaN(quantity)) {
         alert('Please complete all fields before submitting.');
         return;
     }
 
-    // Proses data dan update tabel
     addToStockTable(model, type, { [color]: quantity });
 
-    // Reset input field setelah data berhasil disimpan
+    // Reset input form setelah data berhasil disimpan
     document.getElementById('purchase-date').value = '';
     document.getElementById('purchase-model').value = '';
     document.getElementById('purchase-type').value = '';
@@ -88,4 +119,7 @@ function handlePurchase(event) {
 }
 
 // Inisialisasi halaman awal
-document.addEventListener('DOMContentLoaded', () => showPage('stock-items'));
+document.addEventListener('DOMContentLoaded', () => {
+    showPage('stock-items'); // Tampilkan halaman Stock Items
+    updateStockTableFromLocalStorage(); // Muat ulang tabel dari Local Storage
+});
