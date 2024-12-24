@@ -1,4 +1,4 @@
-// Navigasi antar halaman
+// Fungsi untuk navigasi antar halaman
 function showPage(pageId) {
     const pages = document.querySelectorAll('.page');
     pages.forEach(page => page.style.display = 'none');
@@ -12,7 +12,6 @@ function showPage(pageId) {
 function saveDataToLocalStorage(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
-        console.log(`Data saved to Local Storage under key "${key}":`, data);
     } catch (e) {
         console.error('Failed to save data to Local Storage:', e);
     }
@@ -47,21 +46,24 @@ function updateStockTableFromLocalStorage() {
             return cell.outerHTML;
         }).join('');
 
-        row.innerHTML = `<td>${item.type}</td><td>${item.model}</td>${colourColumns}`;
+        row.innerHTML = `
+            <td>${item.type}</td>
+            <td>${item.model}</td>
+            <td>${item.storage}</td>
+            ${colourColumns}
+        `;
         tableBody.appendChild(row);
     });
-
-    console.log('Stock Table Updated:', stockData);
 }
 
 // Fungsi untuk menambah atau memperbarui stok
-function addToStockTable(model, type, quantities, isSelling = false) {
+function addToStockTable(model, type, storage, quantities) {
     let stockData = getDataFromLocalStorage('stockData');
-    let item = stockData.find(i => i.type === type && i.model === model);
+    let item = stockData.find(i => i.type === type && i.model === model && i.storage === storage);
 
     if (!item) {
         // Jika item tidak ditemukan, tambahkan item baru
-        item = { type, model, quantities: { ...quantities } };
+        item = { type, model, storage, quantities: { ...quantities } };
         stockData.push(item);
     } else {
         // Jika item ditemukan, perbarui jumlah stok
@@ -83,24 +85,26 @@ function handleSelling(event) {
     const date = document.getElementById('selling-date').value;
     const model = document.getElementById('selling-model').value;
     const type = document.getElementById('selling-type').value;
+    const storage = document.getElementById('selling-storage').value;
     const color = document.getElementById('selling-colour').value;
     const quantity = -Math.abs(parseInt(document.getElementById('selling-quantity').value));
 
-    if (!date || !model || !type || !color || isNaN(quantity)) {
+    if (!date || !model || !type || !storage || !color || isNaN(quantity)) {
         alert('Please complete all fields before submitting.');
         return;
     }
 
-    addToStockTable(model, type, { [color]: quantity }, true);
+    addToStockTable(model, type, storage, { [color]: quantity });
 
     // Reset input form setelah data berhasil disimpan
     document.getElementById('selling-date').value = '';
     document.getElementById('selling-model').value = '';
     document.getElementById('selling-type').value = '';
+    document.getElementById('selling-storage').value = '';
     document.getElementById('selling-colour').value = '';
     document.getElementById('selling-quantity').value = '';
 
-    alert(`Selling data saved for ${model} (${type}) on ${date}. Stock has been updated.`);
+    alert(`Selling data saved for ${model} (${type}, ${storage}) on ${date}. Stock has been updated.`);
 }
 
 // Fungsi untuk menangani Purchase
@@ -110,24 +114,26 @@ function handlePurchase(event) {
     const date = document.getElementById('purchase-date').value;
     const model = document.getElementById('purchase-model').value;
     const type = document.getElementById('purchase-type').value;
+    const storage = document.getElementById('purchase-storage').value;
     const color = document.getElementById('purchase-colour').value;
     const quantity = Math.abs(parseInt(document.getElementById('purchase-quantity').value));
 
-    if (!date || !model || !type || !color || isNaN(quantity)) {
+    if (!date || !model || !type || !storage || !color || isNaN(quantity)) {
         alert('Please complete all fields before submitting.');
         return;
     }
 
-    addToStockTable(model, type, { [color]: quantity });
+    addToStockTable(model, type, storage, { [color]: quantity });
 
     // Reset input form setelah data berhasil disimpan
     document.getElementById('purchase-date').value = '';
     document.getElementById('purchase-model').value = '';
     document.getElementById('purchase-type').value = '';
+    document.getElementById('purchase-storage').value = '';
     document.getElementById('purchase-colour').value = '';
     document.getElementById('purchase-quantity').value = '';
 
-    alert(`Purchase data saved for ${model} (${type}) on ${date}. Stock has been updated.`);
+    alert(`Purchase data saved for ${model} (${type}, ${storage}) on ${date}. Stock has been updated.`);
 }
 
 // Inisialisasi halaman awal
