@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Stock Management System</h1>
+    </header>
+    <nav>
+        <a href="#" onclick="showPage('stock-items')">Stock Items</a>
+        <a href="#" onclick="showPage('selling')">Selling</a>
+        <a href="#" onclick="showPage('purchase')">Purchase</a>
+    </nav>
+    <div class="container">
+        <!-- Stock Items Page -->
+        <div id="stock-items" class="page">
+            <h2>Stock Items</h2>
+            <table id="stock-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Model</th>
+                        <th>Natural</th>
+                        <th>Blue</th>
+                        <th>White</th>
+                        <th>Black</th>
+                        <th>Yellow</th>
+                        <th>Pink</th>
+                        <th>Green</th>
+                        <th>Purple</th>
+                        <th>Gold</th>
+                        <th>Silver</th>
+                        <th>Red</th>
+                        <th>Grey</th>
+                        <th>Graphite</th>
+                        <th>Non Colour</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Selling Page -->
+<div id="selling" class="page" style="display:none;">
+    <h2>Selling</h2>
+    <form onsubmit="handleSelling(event)">
+        <div class="form-group">
+            <label for="selling-date">Date:</label>
+            <input type="date" id="selling-date" name="selling-date" required>
+        </div>
+        <div class="form-group">
+            <label for="selling-model">Model:</label>
+            <input type="text" id="selling-model" name="selling-model" required>
+        </div>
+        <div class="form-group">
+            <label for="selling-type">Type:</label>
+            <select id="selling-type" name="selling-type" required>
+                <option value="newset">Newset</option>
+                <option value="secondhand">Secondhand</option>
+                <option value="tradein">Trade In</option>
+                <option value="installment">Installment</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="selling-colour">Colour:</label>
+            <select id="selling-colour" name="selling-colour" required>
+                <option value="natural">Natural</option>
+                <option value="blue">Blue</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="yellow">Yellow</option>
+                <option value="pink">Pink</option>
+                <option value="green">Green</option>
+                <option value="purple">Purple</option>
+                <option value="gold">Gold</option>
+                <option value="silver">Silver</option>
+                <option value="red">Red</option>
+                <option value="grey">Grey</option>
+                <option value="graphite">Graphite</option>
+                <option value="noncolour">Non Colour</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="selling-quantity">Selling Quantity:</label>
+            <input type="number" id="selling-quantity" name="selling-quantity" min="1" required>
+        </div>
+        <button type="submit">Save Selling</button>
+    </form>
+</div>
+
+<!-- Purchase Page -->
+<div id="purchase" class="page" style="display:none;">
+    <h2>Purchase</h2>
+    <form onsubmit="handlePurchase(event)">
+        <div class="form-group">
+            <label for="purchase-date">Date:</label>
+            <input type="date" id="purchase-date" name="purchase-date" required>
+        </div>
+        <div class="form-group">
+            <label for="purchase-model">Model:</label>
+            <input type="text" id="purchase-model" name="purchase-model" required>
+        </div>
+        <div class="form-group">
+            <label for="purchase-type">Type:</label>
+            <select id="purchase-type" name="purchase-type" required>
+                <option value="newset">Newset</option>
+                <option value="secondhand">Secondhand</option>
+                <option value="tradein">Trade In</option>
+                <option value="installment">Installment</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="purchase-colour">Colour:</label>
+            <select id="purchase-colour" name="purchase-colour" required>
+                <option value="natural">Natural</option>
+                <option value="blue">Blue</option>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="yellow">Yellow</option>
+                <option value="pink">Pink</option>
+                <option value="green">Green</option>
+                <option value="purple">Purple</option>
+                <option value="gold">Gold</option>
+                <option value="silver">Silver</option>
+                <option value="red">Red</option>
+                <option value="grey">Grey</option>
+                <option value="graphite">Graphite</option>
+                <option value="noncolour">Non Colour</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="purchase-quantity">Purchase Quantity:</label>
+            <input type="number" id="purchase-quantity" name="purchase-quantity" min="1" required>
+        </div>
+        <button type="submit">Save Purchase</button>
+    </form>
+</div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
