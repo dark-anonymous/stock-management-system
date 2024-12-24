@@ -10,13 +10,22 @@ function showPage(pageId) {
 
 // Fungsi untuk menyimpan data ke Local Storage
 function saveDataToLocalStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+    } catch (e) {
+        console.error('Failed to save data to Local Storage:', e);
+    }
 }
 
 // Fungsi untuk mengambil data dari Local Storage
 function getDataFromLocalStorage(key) {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : [];
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        console.error('Failed to retrieve data from Local Storage:', e);
+        return [];
+    }
 }
 
 // Fungsi untuk memperbarui tabel Stock Items
