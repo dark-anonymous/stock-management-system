@@ -12,6 +12,7 @@ function showPage(pageId) {
 function saveDataToLocalStorage(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
+        console.log(`Data saved to Local Storage under key "${key}":`, data);
     } catch (e) {
         console.error('Failed to save data to Local Storage:', e);
     }
@@ -49,6 +50,8 @@ function updateStockTableFromLocalStorage() {
         row.innerHTML = `<td>${item.type}</td><td>${item.model}</td>${colourColumns}`;
         tableBody.appendChild(row);
     });
+
+    console.log('Stock Table Updated:', stockData);
 }
 
 // Fungsi untuk menambah atau memperbarui stok
