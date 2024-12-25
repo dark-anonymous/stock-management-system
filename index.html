@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Management System</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Stock Management System</h1>
+        <h1><i class="fas fa-boxes"></i> Stock Management System</h1>
     </header>
     <nav>
-        <a href="#" onclick="showPage('stock-items')">Stock Items</a>
-        <a href="#" onclick="showPage('selling')">Selling</a>
-        <a href="#" onclick="showPage('purchase')">Purchase</a>
+        <a href="#" data-page="stock-items"><i class="fas fa-box"></i> Stock Items</a>
+        <a href="#" data-page="selling"><i class="fas fa-cart-arrow-down"></i> Selling</a>
+        <a href="#" data-page="purchase"><i class="fas fa-cart-plus"></i> Purchase</a>
     </nav>
     <div class="container">
         <!-- Stock Items Page -->
         <div id="stock-items" class="page">
-            <h2>Stock Items</h2>
+            <h2><i class="fas fa-warehouse"></i> Stock Items</h2>
             <table id="stock-table">
                 <thead>
                     <tr>
-                        <th>Type</th>
                         <th>Model</th>
-                        <th>Storage</th>
+                        <th>Type</th>
                         <th>Natural</th>
                         <th>Blue</th>
                         <th>White</th>
@@ -41,124 +41,85 @@
                         <th>Non Colour</th>
                     </tr>
                 </thead>
+                <tbody id="stock-items-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Selling Page -->
+        <div id="selling" class="page" style="display: none;">
+            <h2><i class="fas fa-cart-arrow-down"></i> Selling</h2>
+            <form id="selling-form">
+                <div class="form-group">
+                    <label for="sell-date">Date:</label>
+                    <input type="date" id="sell-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="sell-model">Model:</label>
+                    <select id="sell-model" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="sell-colour">Colour:</label>
+                    <select id="sell-colour" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="sell-quantity">Selling Quantity:</label>
+                    <input type="number" id="sell-quantity" placeholder="Enter quantity" required>
+                </div>
+                <button type="submit" class="btn-primary">Submit Selling</button>
+            </form>
+            <h3>Submitted Data</h3>
+            <table id="selling-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Model</th>
+                        <th>Colour</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
                 <tbody></tbody>
             </table>
         </div>
-        
-        <!-- Selling Page -->
-        <div id="selling" class="page" style="display:none;">
-            <h2>Selling</h2>
-            <form onsubmit="handleSelling(event)">
-                <div class="form-group">
-                    <label for="selling-date">Date:</label>
-                    <input type="date" id="selling-date" name="selling-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="selling-model">Model:</label>
-                    <input type="text" id="selling-model" name="selling-model" required>
-                </div>
-                <div class="form-group">
-                    <label for="selling-type">Type:</label>
-                    <select id="selling-type" name="selling-type" required>
-                        <option value="newset">Newset</option>
-                        <option value="secondhand">Secondhand</option>
-                        <option value="tradein">Trade In</option>
-                        <option value="installment">Installment</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="selling-storage">Storage:</label>
-                    <select id="selling-storage" name="selling-storage" required>
-                        <option value="64gb">64GB</option>
-                        <option value="128gb">128GB</option>
-                        <option value="256gb">256GB</option>
-                        <option value="512gb">512GB</option>
-                        <option value="1tb">1TB</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="selling-colour">Colour:</label>
-                    <select id="selling-colour" name="selling-colour" required>
-                        <option value="natural">Natural</option>
-                        <option value="blue">Blue</option>
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                        <option value="yellow">Yellow</option>
-                        <option value="pink">Pink</option>
-                        <option value="green">Green</option>
-                        <option value="purple">Purple</option>
-                        <option value="gold">Gold</option>
-                        <option value="silver">Silver</option>
-                        <option value="red">Red</option>
-                        <option value="grey">Grey</option>
-                        <option value="graphite">Graphite</option>
-                        <option value="noncolour">Non Colour</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="selling-quantity">Selling Quantity:</label>
-                    <input type="number" id="selling-quantity" name="selling-quantity" min="1" required>
-                </div>
-                <button type="submit">Save Selling</button>
-            </form>
-        </div>
 
         <!-- Purchase Page -->
-        <div id="purchase" class="page" style="display:none;">
-            <h2>Purchase</h2>
-            <form onsubmit="handlePurchase(event)">
+        <div id="purchase" class="page" style="display: none;">
+            <h2><i class="fas fa-cart-plus"></i> Purchase</h2>
+            <form id="purchase-form">
                 <div class="form-group">
                     <label for="purchase-date">Date:</label>
-                    <input type="date" id="purchase-date" name="purchase-date" required>
+                    <input type="date" id="purchase-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="purchase-supplier">Supplier:</label>
+                    <select id="purchase-supplier" required></select>
                 </div>
                 <div class="form-group">
                     <label for="purchase-model">Model:</label>
-                    <input type="text" id="purchase-model" name="purchase-model" required>
-                </div>
-                <div class="form-group">
-                    <label for="purchase-type">Type:</label>
-                    <select id="purchase-type" name="purchase-type" required>
-                        <option value="newset">Newset</option>
-                        <option value="secondhand">Secondhand</option>
-                        <option value="tradein">Trade In</option>
-                        <option value="installment">Installment</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="purchase-storage">Storage:</label>
-                    <select id="purchase-storage" name="purchase-storage" required>
-                        <option value="64gb">64GB</option>
-                        <option value="128gb">128GB</option>
-                        <option value="256gb">256GB</option>
-                        <option value="512gb">512GB</option>
-                        <option value="1tb">1TB</option>
-                    </select>
+                    <select id="purchase-model" required></select>
                 </div>
                 <div class="form-group">
                     <label for="purchase-colour">Colour:</label>
-                    <select id="purchase-colour" name="purchase-colour" required>
-                        <option value="natural">Natural</option>
-                        <option value="blue">Blue</option>
-                        <option value="white">White</option>
-                        <option value="black">Black</option>
-                        <option value="yellow">Yellow</option>
-                        <option value="pink">Pink</option>
-                        <option value="green">Green</option>
-                        <option value="purple">Purple</option>
-                        <option value="gold">Gold</option>
-                        <option value="silver">Silver</option>
-                        <option value="red">Red</option>
-                        <option value="grey">Grey</option>
-                        <option value="graphite">Graphite</option>
-                        <option value="noncolour">Non Colour</option>
-                    </select>
+                    <select id="purchase-colour" required></select>
                 </div>
                 <div class="form-group">
                     <label for="purchase-quantity">Purchase Quantity:</label>
-                    <input type="number" id="purchase-quantity" name="purchase-quantity" min="1" required>
+                    <input type="number" id="purchase-quantity" placeholder="Enter quantity" required>
                 </div>
-                <button type="submit">Save Purchase</button>
+                <button type="submit" class="btn-primary">Submit Purchase</button>
             </form>
+            <h3>Submitted Data</h3>
+            <table id="purchase-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Supplier</th>
+                        <th>Model</th>
+                        <th>Colour</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
     <script src="script.js"></script>
